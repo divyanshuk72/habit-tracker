@@ -1,5 +1,6 @@
 import { Container, Typography } from "@mui/material";
 import AddHabitForm from "./components/add-habit-form";
+import HabitList from "./components/habit-list";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
           Habit Tracker
         </Typography>
         <AddHabitForm />
+        <HabitList />
       </Container>
     </>
   );

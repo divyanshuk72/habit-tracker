@@ -30,8 +30,14 @@ const habitSlice = createSlice({
         }
       }
     },
+    removeHabit: (state, action) => {
+      const removedHabit = state.habits.filter(
+        (h) => h.id === action.payload.id
+      );
+      state.habits.pop(removedHabit);
+    },
   },
 });
 
-export const { addHabit, toggleHabit } = habitSlice.actions;
+export const { addHabit, toggleHabit, removeHabit } = habitSlice.actions;
 export default habitSlice.reducer;

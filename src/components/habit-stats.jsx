@@ -1,8 +1,16 @@
-import { Paper, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { LinearProgress, Paper, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchHabits } from "../store/habit-slice";
 
 const HabitStatistics = () => {
-  const { habits } = useSelector((state) => state.habits);
+  const { habits, isLoading, error } = useSelector((state) => state.habits);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchHabits());
+  }, [dispatch]);
 
   const getCompletedToday = () => {
     const today = new Date().toISOString().split("T")[0];
@@ -31,6 +39,14 @@ const HabitStatistics = () => {
   const getLongestStreak = () => {
     return Math.max(...habits.map(getStreak), 0);
   };
+
+  if (isLoading) {
+    return <LinearProgress />;
+  }
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
 
   return (
     <Paper elevation={2} sx={{ p: 2, mt: 4 }}>

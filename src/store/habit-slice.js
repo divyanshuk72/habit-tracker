@@ -1,8 +1,32 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   habits: [],
+  isLoading: false,
+  error: null,
 };
+
+export const fetchHabits = createAsyncThunk("habits/fetchHabits", async () => {
+  // Simulating an API call
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const mockHabits = [
+    {
+      id: "1",
+      name: "Read",
+      frequency: "daily",
+      completedDates: [],
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: "2",
+      name: "Exercise",
+      frequency: "daily",
+      completedDates: [],
+      createdAt: new Date().toISOString(),
+    },
+  ];
+  return mockHabits;
+});
 
 const habitSlice = createSlice({
   name: "habits",
@@ -36,6 +60,20 @@ const habitSlice = createSlice({
       );
       state.habits.pop(removedHabit);
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchHabits.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchHabits.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.habits = action.payload;
+      })
+      .addCase(fetchHabits.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || "Failed to fetch habits";
+      });
   },
 });
 

@@ -8,13 +8,25 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addHabit } from "../store/habit-slice";
 
 const AddHabitForm = () => {
   const [name, setName] = useState("");
   const [frequency, setFrequency] = useState("Daily");
 
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (name.trim()) {
+      dispatch(addHabit({ name, frequency }));
+    }
+    setName("");
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Box
         sx={{
           display: "flex",

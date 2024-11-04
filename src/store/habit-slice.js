@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  habits: [],
+  habits: [], // This will be set from localStorage if available in store.js
   isLoading: false,
   error: null,
 };
 
 export const fetchHabits = createAsyncThunk("habits/fetchHabits", async () => {
-  // Simulating an API call
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const mockHabits = [
     {
@@ -44,21 +43,19 @@ const habitSlice = createSlice({
     },
     toggleHabit: (state, action) => {
       const habit = state.habits.find((h) => h.id === action.payload.id);
+      const today = new Date().toISOString().split("T")[0];
 
       if (habit) {
-        const index = habit.completedDates.indexOf(action.payload.date);
+        const index = habit.completedDates.indexOf(today);
         if (index > -1) {
           habit.completedDates.splice(index, 1);
         } else {
-          habit.completedDates.push(action.payload.date);
+          habit.completedDates.push(today);
         }
       }
     },
     removeHabit: (state, action) => {
-      const removedHabit = state.habits.filter(
-        (h) => h.id === action.payload.id
-      );
-      state.habits.pop(removedHabit);
+      state.habits = state.habits.filter((h) => h.id !== action.payload.id);
     },
   },
   extraReducers: (builder) => {
